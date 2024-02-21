@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game | Login</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+
+    <!-- OBSERVAÇÃO: 
+        Para adicionar o script do JS no head precisa utilizar (defer): 
+        <script defer src="./assets/js/login.js"></script>. O defer fará
+        com que o carregamento do JS seja feito depois de carregar os outros
+        conteúdos da página. O resultado é o mesmo que adicionar o script no
+        final do body. -->
+
+</head>
+<body>
+
+<form class="login-form">
+    <div class="login__header">
+        <img src="./assets/img/brain.png" alt="brain icon">
+        <h1>Memory Game</h1>
+    </div>
+    <input type="text" placeholder="name" class="login__input">
+    <button type="submit" class="login__button" disabled>Play</button>
+</form>
+
+<!-- JavaScript -->
+    <script src="./assets/js/login.js"></script>
+</body>
+</html>

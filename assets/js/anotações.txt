@@ -1,0 +1,185 @@
+======================================================================
+                        AQURIVO LOGIN.JS
+======================================================================
+
+Criando uma const input e pegando a classe do input do html: 
+const input = document.querySelector('.login__input');
+
+======================================================================
+Criando uma const button e pegando a classe do button do html: 
+const button = document.querySelector('.login__button');
+
+======================================================================
+HABILITAR E DESABILITAR BUTTON
+
+Criar uma função dentro de uma constante:
+const validateInput = ({ target }) => {
+
+======================================================================
+Criar um if com o target, valor dele e o tamanho e se for maior que 2
+pode remover o disabled que está por padrão no código HTML; 
+
+    if(target.value.length > 2){
+        button.removeAttribute('disabled');
+
+======================================================================       
+Se a quantidade de caracteres dentro do input de texto for menor igual
+ou menor que 2, ou a pessoa apagar os caracteres e continuie sendo menor
+ou igual a 2 o button ficará como foi declarado 'didabled';
+
+    } else {
+        button.setAttribute('disabled', '');
+    }
+}
+
+======================================================================
+Bloqueia ou evita o comportamento padrão do formulário de apenas enviar
+o conteúdo e atualizar a página;
+
+//Envio do formulário:
+const handleSubmit = (event) => {
+    event.preventDefault();
+
+======================================================================
+Para salvar o que for escrito no campo do formulário;
+    localStorage.setItem('player', input.value) //uma chave e o valor 
+    atribuido no input;
+
+    window.location = 'pages/game.html'; //local para onde a pessoa irá ser redirecionada;
+}
+
+======================================================================
+input.addEventListener('input', validateInput);
+form.addEventListener('submit', handleSubmit);
+
+======================================================================
+OBS: toda vez que digitar uma letra no campo de texto
+o target irá mostrar cada letra digitada;
+
+OBS 2: setAttribute geralmente recebe 2 parâmetros, porém no caso não
+é necessário;
+
+======================================================================
+                            AQURIVO GAME.JS
+======================================================================  
+
+const grid = document.querySelector('.grid');
+
+//Array das fotos
+const characters = [
+    'bobby',
+    'castiel',
+    'crowley',
+    'dean',
+    'jo',
+    'john',
+    'mary',
+    'meg',
+    'ruby',
+    'sam'
+];
+
+//Criar elementos
+const createElement = (tag, className) => {
+    const element = document.createElement(tag);
+    element.className = className;
+    return element;
+}
+
+//Variáveis da primeira escolha e segunda escolha
+let firstCard = '';
+let secondCard = '';
+
+const checkEndGame = () => {
+    //procurar por todas as classes disabled-card
+    const disabledCrds = document.querySelectorAll('.disabled-card');
+
+    if(disabledCrds.length === 20){
+        alert('Parabéns, você conseguiu!');
+    }
+}
+
+//Combinação certa ou errada
+const checkCards = () => {
+    const firstCharacter = firstCard.getAttribute('data-character');
+    const secondCharacter = secondCard.getAttribute('data-character');
+
+    //verificar
+    if (firstCharacter === secondCharacter) {
+
+        //MANTÉM AS CARTAS CERTAS E MODIFICA A COR
+        firstCard.firstChild.classList.add('disabled-card');
+        secondCard.firstChild.classList.add('disabled-card');
+
+        //RESET
+        firstCard = '';
+        secondCard = '';
+
+        //Checar se o jogo foi finalizado com sucesso
+        checkEndGame();
+
+    } else {
+        setTimeout(() => {
+
+            //ESCONDE AS CARTAS NOVAMENTE
+            firstCard.classList.remove('reveal-card');
+            secondCard.classList.remove('reveal-card');
+      
+            //RESET
+            firstCard = '';
+            secondCard = '';
+      
+          }, 500);
+    }
+}
+
+//Revelar carta
+const revealCard = ({ target }) => {
+    if (target.parentNode.className.includes('reveal-card')) {
+        return;
+    }
+
+    if (firstCard === '') {
+        //revela a carta
+        target.parentNode.classList.add('reveal-card');
+        //salva a carta
+        firstCard = target.parentNode;
+    } else if (secondCard === '') {
+        target.parentNode.classList.add('reveal-card');
+        secondCard = target.parentNode;
+
+        checkCards();
+    }
+}
+
+// Criar carta
+const createCard = (character) => {
+    const card = createElement('div', 'card');
+    const front = createElement('div', 'face front');
+    const back = createElement('div', 'face back');
+
+    front.style.backgroundImage = `url('../img/${character}.png')`;
+
+    card.appendChild(front);
+    card.appendChild(back);
+
+    card.addEventListener('click', revealCard);
+    card.setAttribute('data-character', character);
+
+    return card;
+}
+
+//Módo do jogo
+const loadGame = () => {
+    const duplicateCharacters = [...characters, ...characters];
+
+    const shuffledArray = duplicateCharacters.sort(() => Math.random() - 0.5);
+
+    shuffledArray.forEach((character) => {
+        const card = createCard(character);
+        grid.appendChild(card);
+    });
+}
+
+loadGame();
+
